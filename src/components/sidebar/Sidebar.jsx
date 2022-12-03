@@ -23,15 +23,17 @@ export default function Sidebar() {
           <h3 className="sidebarTitle">Dashboard</h3>
           <ul className="sidebarList">
             <Link to="/" className="link">
-            <li className="sidebarListItem active">
-              <LineStyle className="sidebarIcon" />
-              Home
-            </li>
+              <li className="sidebarListItem active">
+                <LineStyle className="sidebarIcon" />
+                Home
+              </li>
             </Link>
-            <li className="sidebarListItem">
-              <Timeline className="sidebarIcon" />
-              Analytics
-            </li>
+            <Link to="/login" className="link">
+              <li className="sidebarListItem">
+                <Timeline className="sidebarIcon" />
+                Login
+              </li>
+            </Link>
             <li className="sidebarListItem">
               <TrendingUp className="sidebarIcon" />
               Sales
@@ -53,10 +55,18 @@ export default function Sidebar() {
                 Products
               </li>
             </Link>
-            <li className="sidebarListItem">
-              <AttachMoney className="sidebarIcon" />
-              Transactions
-            </li>
+            <Link to="/designs" className="link">
+              <li className="sidebarListItem">
+                <Storefront className="sidebarIcon" />
+                Designs
+              </li>
+            </Link>
+            <Link to="/newproduct" className="link" >
+              <li className="sidebarListItem">
+                <AttachMoney className="sidebarIcon" />
+                Add New Product
+              </li>
+            </Link>
             <li className="sidebarListItem">
               <BarChart className="sidebarIcon" />
               Reports

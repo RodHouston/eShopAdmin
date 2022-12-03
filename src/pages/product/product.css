@@ -55,6 +55,7 @@
 
 .productInfoBottom {
   margin-top: 10px;
+  
 }
 
 .productInfoItem {
@@ -72,16 +73,20 @@
   margin: 20px;
   -webkit-box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
   box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
+  /* background-color: red; */
 }
 
 .productForm {
   display: flex;
   justify-content: space-between;
+  align-items: center;
 }
 
 .productFormLeft {
   display: flex;
   flex-direction: column;
+  margin: 10px;
+  padding-right: 5px;
 }
 
 .productFormLeft > label {
@@ -116,6 +121,14 @@
 
 .productUpload{
   display: flex;
+  width: 300px;
+  height: 300px;
+  align-items: center;
+}
+.productPic{
+  display: flex;
+  max-width: 100%;
+  max-height: 100%;
   align-items: center;
 }
 
@@ -127,4 +140,62 @@
   color:white;
   font-weight: 600;
   cursor: pointer;
+}
+.wholeSaleDiv{
+  display: flex;
+  flex-direction: column;
+  transition: all ease-in-out 1s;
+  align-items: center;
+  text-align: center;
+  overflow: hidden;
+  background-color: rgba(0, 0, 0, 0.1);
+
+}
+.wholeSalePair{
+  display: flex;
+  flex-direction: row;
+  margin: 0 auto;
+  justify-content: center;
+  margin-bottom: 10px;
+  width: 100%;
+}
+.wholeSaleItem{
+  width: 20%;
+  display: flex;
+  flex-direction: column;  
+  margin-bottom: 10px;
+ 
+}
+.wholeSaleItem input{  
+  border: none;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+.leftInput input{
+text-align: right;
+}
+.wholesaleText{  
+  margin: 10px;
+  margin-top: auto;
+}
+.txtArea{
+  width: 100%;
+}
+.catDivs{
+  margin: 10px;
+}
+.morePhotosContainer{
+  display: flex;
+  width: 100%;
+  height: 60px;
+  background-color: red;
+}
+.extraPhotosBox{
+  width: 40px;
+  height: 40px;
+  margin: auto;
+  background-color: blue;
+}
+.extraPhoto{
+ max-width: 100%;
+  max-height: 100%;
 }

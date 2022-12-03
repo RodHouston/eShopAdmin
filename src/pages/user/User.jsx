@@ -6,10 +6,71 @@ import {
   PhoneAndroid,
   Publish,
 } from "@material-ui/icons";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useHistory } from "react-router-dom";
+import { useLocation } from "react-router-dom/cjs/react-router-dom.min";
+import { getUserById, updateUser } from "../../redux/apiCalls";
 import "./user.css";
 
 export default function User() {
+
+  const dispatch = useDispatch()
+  let location = useLocation();
+  const navigate = useHistory();
+  const userID = location.pathname.split("/")[2]
+  const user = useSelector((state) => state.user.editUser)
+  // console.log(user);
+
+  const [userEdit, setEditUser] = useState('')
+  const [isWorking, setIsWorking] = useState(false)
+
+  const isFetch = useSelector((state) => state.user.isFetching)
+  console.log(user);
+
+
+  const handleFields = (e)  => {        
+      // console.log(e.name);
+      const placeholder = e.name
+      const val = e.value
+      setEditUser({
+          ...userEdit,
+          [placeholder]: val
+      })       
+     }
+
+     const handleupdateUser = async (e) => {
+      e.preventDefault()
+      console.log("trying to update");
+      if(!isFetch) {
+        try{
+          console.log(user);
+          console.log(userEdit)
+            updateUser(user._id, userEdit, dispatch)
+          }catch(err){
+            console.log(err);
+          }
+      
+      }    
+        
+    
+        navigate.push("/users")
+      
+
+      
+     }
+
+
+  useEffect(() => {
+    getUserById(userID, userID, dispatch)
+    setEditUser(userEdit)
+  }, [userEdit])
+
+
+
+
+
+
   return (
     <div className="user">
       <div className="userTitleContainer">
@@ -27,8 +88,10 @@ export default function User() {
               className="userShowImg"
             />
             <div className="userShowTopTitle">
-              <span className="userShowUsername">Anna Becker</span>
-              <span className="userShowUserTitle">Software Engineer</span>
+              <span className="userShowUsername">{user.username}</span>
+              <span className="userShowUserTitle">
+                {user.isAdmin ? "Adminatrator" : "Customer"}
+              </span>
             </div>
           </div>
           <div className="userShowBottom">
@@ -48,7 +111,7 @@ export default function User() {
             </div>
             <div className="userShowInfo">
               <MailOutline className="userShowIcon" />
-              <span className="userShowInfoTitle">annabeck99@gmail.com</span>
+              <span className="userShowInfoTitle">{user.email}</span>
             </div>
             <div className="userShowInfo">
               <LocationSearching className="userShowIcon" />
@@ -58,45 +121,76 @@ export default function User() {
         </div>
         <div className="userUpdate">
           <span className="userUpdateTitle">Edit</span>
+
           <form className="userUpdateForm">
             <div className="userUpdateLeft">
               <div className="userUpdateItem">
                 <label>Username</label>
                 <input
+                name= "username" 
+                onChange={(e) => handleFields(e.target)}
                   type="text"
-                  placeholder="annabeck99"
+                  placeholder={user.username}
                   className="userUpdateInput"
                 />
               </div>
               <div className="userUpdateItem">
-                <label>Full Name</label>
+                <label>First Name</label>
                 <input
+                name= "firstname" 
+                 onChange={(e) => handleFields(e.target)}
                   type="text"
-                  placeholder="Anna Becker"
+                  placeholder={user.firstname}
+                  className="userUpdateInput"
+                />
+              </div>
+              <div className="userUpdateItem">
+                <label>Last Name</label>
+                <input
+                name= "lastname" 
+                 onChange={(e) => handleFields(e.target)}
+                  type="text"
+                  placeholder={user.lastname}
                   className="userUpdateInput"
                 />
               </div>
               <div className="userUpdateItem">
                 <label>Email</label>
                 <input
+                name= "email" 
+                onChange={(e) => handleFields(e.target)}
                   type="text"
-                  placeholder="annabeck99@gmail.com"
+                  placeholder={user.email}
                   className="userUpdateInput"
                 />
               </div>
               <div className="userUpdateItem">
-                <label>Phone</label>
+                <label>City</label>
                 <input
+                name= "city" 
+                onChange={(e) => handleFields(e.target)}
                   type="text"
-                  placeholder="+1 123 456 67"
+                  placeholder={user.city}
                   className="userUpdateInput"
                 />
               </div>
               <div className="userUpdateItem">
-                <label>Address</label>
+                <label>State</label>
                 <input
+                name= "state" 
+                onChange={(e) => handleFields(e.target)}
                   type="text"
-                  placeholder="New York | USA"
+                  placeholder={user.state}
+                  className="userUpdateInput"
+                />
+              </div>
+              <div className="userUpdateItem">
+                <label>Zipcode</label>
+                <input
+                name= "zipcode" 
+                onChange={(e) => handleFields(e.target)}
+                  type="text"
+                  placeholder={user.zipcode}
                   className="userUpdateInput"
                 />
               </div>
@@ -105,7 +199,7 @@ export default function User() {
               <div className="userUpdateUpload">
                 <img
                   className="userUpdateImg"
-                  src="https://images.pexels.com/photos/1152994/pexels-photo-1152994.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500"
+                  src={user.img}
                   alt=""
                 />
                 <label htmlFor="file">
@@ -113,11 +207,24 @@ export default function User() {
                 </label>
                 <input type="file" id="file" style={{ display: "none" }} />
               </div>
-              <button className="userUpdateButton">Update</button>
+              <button className="userUpdateButton" onClick={handleupdateUser}>Update</button>
             </div>
           </form>
         </div>
+        <div>
+        </div>
+      </div>
+
+      <div className="userOrder">
+        <label>Username</label>
+        <input
+          type="text"
+          placeholder={user.username}
+          className="userUpdateInput"
+        />
       </div>
     </div>
+
+
   );
 }

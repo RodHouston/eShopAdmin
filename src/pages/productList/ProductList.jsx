@@ -24,6 +24,7 @@ export default function ProductList() {
     deleteProducts(id, dispatch)
   };
 
+
   const columns = [
     { field: "_id", headerName: "ID", width: 220 },
     {
@@ -31,6 +32,7 @@ export default function ProductList() {
       headerName: "Product",
       width: 200,
       renderCell: (params) => {
+        // console.log(params.row);
         return (
           <div className="productListItem">
             <img className="productListImg" src={params.row.img} alt="" />
@@ -39,7 +41,8 @@ export default function ProductList() {
         );
       },
     },
-    { field: "inStock", headerName: "Stock", width: 200 },
+    { field: "inStock", headerName: "Stock", width: 150 },
+    { field: "inventory", headerName: "Inventory", width: 150 },
     {
       field: "price",
       headerName: "Price",

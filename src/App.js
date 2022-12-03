@@ -9,13 +9,23 @@ import NewUser from "./pages/newUser/NewUser";
 import ProductList from "./pages/productList/ProductList";
 import Product from "./pages/product/Product";
 import NewProduct from "./pages/newProduct/NewProduct";
+
+import DesignList from "./pages/designList/DesignList";
+import Design from "./pages/design/Design";
+import NewDesign from "./pages/newDesign/NewDesign";
 import Login from "./pages/login/Login";
 
 function App() {
 
-  const admin = JSON.parse(JSON.parse(localStorage.getItem("persist:root")).user).currentUser.isAdmin;
-
-
+  const admin = () => {
+    if (
+      JSON.parse(JSON.parse(localStorage.getItem('persist:root')).user)
+        .currentUser.accessToken
+    ) {
+      return JSON.parse(JSON.parse(localStorage.getItem('persist:root')).user)
+        .currentUser.accessToken;
+    } else { return '' }
+  };
   return (
     <Router>
        <Switch>
@@ -48,6 +58,17 @@ function App() {
                   </Route>
                   <Route path="/newproduct">
                     <NewProduct />
+                  </Route>          
+
+
+                  <Route path="/designs">
+                    <DesignList />
+                  </Route>
+                  <Route path="/design/:designId">
+                    <Design />
+                  </Route>
+                  <Route path="/newdesign">
+                    <NewDesign/>
                   </Route>            
               </div>
             </>
