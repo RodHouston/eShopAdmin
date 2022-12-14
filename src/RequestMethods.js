@@ -22,8 +22,9 @@ let TOKEN =  JSON.parse(JSON.parse(localStorage.getItem("persist:root"))?.user||
     //     .currentUser.accessToken;
     // } else {  TOKEN = JSON.parse(JSON.parse(localStorage.getItem("persist:root"))?.user|| "{}")?.currentUser?.accessToken }
  
- 
-    console.log(JSON.parse(JSON.parse(localStorage.getItem("persist:root"))?.user));
+//  console.log('insde REquest');
+//  console.log(TOKEN);
+//     console.log(JSON.parse(JSON.parse(localStorage.getItem("persist:root"))?.user));
     
 export const publicRequest = axios.create({
     baseURL : BASE_URL,

@@ -9,8 +9,7 @@ import {addProducts} from '../../redux/apiCalls'
 
 export default function NewProduct() {
   const [inputs, setInputs] = useState({})
-  const [file, setFile] = useState([])
-  const [multiFiles, setMultiFile] = useState([])
+  const [file, setFile] = useState(null)
   const [previewFile, setPreviewFile] = useState(null)
   const [cat, setCat] = useState([])
   const [subCat, setSubCat] = useState([])
@@ -200,24 +199,20 @@ export default function NewProduct() {
 
 
   const handlePhoto = (e) => {
-    console.log("here");
    setFile(e.target.files[0])
    setPreviewFile(URL.createObjectURL(e.target.files[0]))
   }
   // const handleSize = (e) => {
   //   setSize(e.target.value.split(','))
   // }
-  // console.log(file);
-
-
+  console.log(file);
   const handleClick = (e) => {
     e.preventDefault()
-
     const fileName = new Date().getTime() + file.name;
     const storage = getStorage(app)
     const StorageRef = ref(storage, fileName)
  
-   const uploadTask = uploadBytesResumable(StorageRef, file);
+  const uploadTask = uploadBytesResumable(StorageRef, file);
 
 // Register three observers:
 // 1. 'state_changed' observer, called any time the state changes
@@ -245,31 +240,15 @@ uploadTask.on('state_changed',
   () => {
     // Handle successful uploads on complete
     // For instance, get the download URL: https://firebasestorage.googleapis.com/...
-
-    let multiPhotos = []
-    if(file.length ==1){
-      getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-        // console.log('File available at', downloadURL);
-        multiPhotos.push(downloadURL)
-      });
-    }else if(file.length > 1){
-      file.map((file => {
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          // console.log('File available at', downloadURL);
-          multiPhotos.push(downloadURL)
-        });
-      }))
-     
-    }
-  
-
-
-    const product = {...inputs, img: file, morePhotos: multiPhotos, salePrice: salePrice, categories: cat, color, size, gender, subCategories: subCat, 
-      wholeSaleTier1: {wholeSaleQuantity1: wholeSaleQuantity1, wholePrice1: wholeSalePrice1},
-      wholeSaleTier2: {wholeSaleQuantity2: wholeSaleQuantity2, wholePrice2: wholeSalePrice2},
-      wholeSaleTier3: {wholeSaleQuantity3: wholeSaleQuantity3, wholePrice3: wholeSalePrice3}};
-    console.log(product);
-    addProducts(product, dispatch)
+    getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+      // console.log('File available at', downloadURL);
+      const product = {...inputs, img: downloadURL, salePrice: salePrice, categories: cat, color, size, gender, subCategories: subCat, 
+        wholeSaleTier1: {wholeSaleQuantity1: wholeSaleQuantity1, wholePrice1: wholeSalePrice1},
+        wholeSaleTier2: {wholeSaleQuantity2: wholeSaleQuantity2, wholePrice2: wholeSalePrice2},
+        wholeSaleTier3: {wholeSaleQuantity3: wholeSaleQuantity3, wholePrice3: wholeSalePrice3}};
+      console.log(product);
+      addProducts(product, dispatch)
+    });
   }
 );
 }
@@ -289,7 +268,7 @@ useEffect(() => {
               <div className="productUpload">
                 <img className="productPic"  src={previewFile} />
               </div>
-            <input type="file" id="file" onChange={handlePhoto} accept="image/png, image/jpeg" />
+            <input type="file" id="file" onChange={handlePhoto}/>
           </div>
           <div className=" wholeSalePair">
                   <div className="addProductItem">

@@ -8,6 +8,7 @@ export const productSlice = createSlice({
       products: [],
       isFetching: false,
       error:false,
+      extraPhotos:[]
   },
   reducers: {
       //get all
@@ -71,11 +72,35 @@ export const productSlice = createSlice({
       state.isFetching = false
       state.error = true
     },
+    //Add Photo 
+    addPhotoStart: (state) => {
+      state.isFetching = true 
+      state.error = false 
+    },
+    addPhotoSuccess: (state, action) => {
+      state.isFetching = false
+      state.extraPhotos.push(action.payload)
+    },
+
+    addPhotoFailure: (state) => {
+      state.isFetching = false
+      state.error = true
+    },
+    addPhotos: (state, action) => {
+      console.log("insde");
+      console.log(action.payload);
+      state.extraPhotos.push(action.payload)
+    },
+    clearXPhotos: (state) => {
+      state.extraPhotos = []
+    }
   },
 });
 
 export const { getProductStart, getProductSuccess, getProductFailure, 
   deleteProductStart, deleteProductSuccess, deleteProductFailure,
-updateProductSuccess, updateProductStart,updateProductFailure, addProductSuccess, addProductStart, addProductFailure} = productSlice.actions;
+updateProductSuccess, updateProductStart,updateProductFailure, 
+addProductSuccess, addProductStart, addProductFailure, addPhotoStart, 
+addPhotoSuccess, addPhotoFailure, addPhotos, clearXPhotos} = productSlice.actions;
 
 export default productSlice.reducer;

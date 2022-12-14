@@ -1,6 +1,15 @@
 import "./newUser.css";
+import { useEffect, useState } from "react";
+import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import app from "../../firebase"
+import { useDispatch } from "react-redux";
+import {addUser} from '../../redux/apiCalls'
+
 
 export default function NewUser() {
+
+
+
   return (
     <div className="newUser">
       <h1 className="newUserTitle">New User</h1>

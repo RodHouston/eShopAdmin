@@ -7,6 +7,8 @@ import UserList from "./pages/userList/UserList";
 import User from "./pages/user/User";
 import NewUser from "./pages/newUser/NewUser";
 import ProductList from "./pages/productList/ProductList";
+import ProductCatList from "./pages/productCategories/ProductCatList";
+import NewProductCat from "./pages/newProductCategory/NewProductCatergory";
 import Product from "./pages/product/Product";
 import NewProduct from "./pages/newProduct/NewProduct";
 
@@ -14,6 +16,7 @@ import DesignList from "./pages/designList/DesignList";
 import Design from "./pages/design/Design";
 import NewDesign from "./pages/newDesign/NewDesign";
 import Login from "./pages/login/Login";
+import PhotoGallery from "./pages/photoGallery/PhotoGallery";
 
 function App() {
 
@@ -59,6 +62,18 @@ function App() {
                   <Route path="/newproduct">
                     <NewProduct />
                   </Route>          
+
+                  <Route path="/photoGallery">
+                    <PhotoGallery />
+                  </Route>          
+
+
+                  <Route path="/newProductCategory">
+                    <NewProductCat />
+                  </Route>   
+                  <Route path="/productCategories">
+                    <ProductCatList />
+                  </Route>
 
 
                   <Route path="/designs">

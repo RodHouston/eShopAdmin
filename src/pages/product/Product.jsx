@@ -7,9 +7,10 @@ import { useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useMemo, useState } from "react";
 import { userRequest } from "../../RequestMethods";
-import { addProducts, updateProducts } from "../../redux/apiCalls";
-import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { addPhotosFireBase, addProducts, updateProducts } from "../../redux/apiCalls";
+import { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject } from "firebase/storage";
 import app from "../../firebase"
+import { addPhotos, clearXPhotos } from "../../redux/productRedux";
 
 export default function Product() {
 
@@ -18,6 +19,7 @@ export default function Product() {
   const [productStats, setProductStats] = useState([])
 
   const product = useSelector((state) => state.product.products.find(product => product._id === productId))
+  const [prod, setPro] = useState(product)
   const [inputs, setInputs] = useState(product)
   const [file, setFile] = useState(product?.img)
   const [cat, setCat] = useState(product.categories)
@@ -27,9 +29,34 @@ export default function Product() {
   const [size, setSize] = useState(product.size)
   const [salePrice, setSalePrice] = useState(0)
 
-  const [mainPhoto, setMainPhoto] = useState("")
-  const [multiPhotos, setMultiPhotos] = useState([])
-  const [previewFiles, setPreviewFiles] = useState(product.morePhotos?.length <=0 ?   ['','','',''] : product.morePhotos)
+  const extraPhotos = useSelector(state => state.product.extraPhotos)
+  const [isMainPhoto, setIsMainPhoto] = useState(false)
+  const [isExtraPhotos, setIsExtraPhoto] = useState(false)
+  const [isUploading, setIsUploading] = useState(false)
+
+  const [multiPhotosUpload, setMultiPhotosUpload] = useState([])
+
+  const moPho = ['', '', '', '']
+  moPho?.map((pro, idx) => {
+    // console.log(product.morePhotos[idx]);
+    if (product.morePhotos[idx] == undefined) {
+      moPho[idx] = '../photos/proPic.jpeg'
+    } else {
+      moPho[idx] = product.morePhotos[idx]
+    }
+  })
+  let mainPho = ''
+  if (product.img == '') {
+    mainPho = '../photos/proPic.jpeg'
+  } else {
+    mainPho = product.img
+  }
+
+  const [mainPhoto, setMainPhoto] = useState(mainPho)
+  const [mainPreviewFile, setMainPreviewFile] = useState(mainPho)
+
+  const [multiPhotos, setMultiPhotos] = useState(moPho)
+  const [previewFiles, setPreviewFiles] = useState(moPho)
 
   const [wholeSalePrice1, setWholeSalePrice1] = useState(0)
   const [wholeSaleQuantity1, setWholeSaleQuantity1] = useState(0)
@@ -41,10 +68,14 @@ export default function Product() {
   const [wholeSaleToggle, setWholeSaleToggle] = useState(product?.isWholeSaleItem)
   const [saleToggle, setSaleToggle] = useState(product?.onSale)
 
-
+  let photos = []
   const dispatch = useDispatch()
 
+
   const handleChange = (e) => {
+    setPro(prev => {
+      return { ...prev, [e.target.name]: e.target.value }
+    })
     setInputs(prev => {
       return { ...prev, [e.target.name]: e.target.value }
     })
@@ -251,129 +282,148 @@ export default function Product() {
     }
   }
 
+
+  const handleMainPhoto = (e) => {
+    setIsMainPhoto(true)
+    // console.log(e);
+    let newMain = mainPho
+    newMain = e
+    let mainPre = mainPreviewFile
+    mainPre = URL.createObjectURL(e)
+    // console.log(newMain);
+    // console.log(mainPre);
+    setMainPhoto(newMain)
+    setMainPreviewFile(mainPre)
+  }
+
   // console.log(previewFiles);
-const handlePhotos= (e, idx) => {
-  setInputs(prev => {
-    return { }
-  })
-  // console.log(e);
-  let newMulti = multiPhotos
-  newMulti[idx] = e
-  let newPre = previewFiles
-  newPre[idx] = URL.createObjectURL(e)
-  setMultiPhotos(newMulti)
-  setPreviewFiles(newPre)
-  // setFile(e)
-  // setPreviewFile(URL.createObjectURL(e))
-  console.log(multiPhotos);
-  console.log(previewFiles);
- }
-//  console.log(file);
+  const handlePhotos = (e, idx) => {
+    setIsExtraPhoto(true)
+    let newMulti = multiPhotos.slice()
+    newMulti[idx] = e
+    let newPre = previewFiles.slice()
+    newPre[idx] = URL.createObjectURL(e)
+    // console.log(newPre[idx]);
+    setMultiPhotos(newMulti)
+    setPreviewFiles(newPre)
+  }
 
- 
- const upLoadPhoto = (e, idx) => {
-   
-   
-//    const fileName = new Date().getTime() + file.name;
-//    const storage = getStorage(app)
-//    const StorageRef = ref(storage, fileName)
 
-//  const uploadTask = uploadBytesResumable(StorageRef, file);
-// // Register three observers:
-// // 1. 'state_changed' observer, called any time the state changes
-// // 2. Error observer, called on failure
-// // 3. Completion observer, called on successful completion
-// uploadTask.on('state_changed', 
-//  (snapshot) => {
-//    // Observe state change events such as progress, pause, and resume
-//    // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-//    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-//    console.log('Upload is ' + progress + '% done');
-//    switch (snapshot.state) {
-//      case 'paused':
-//        console.log('Upload is paused');
-//        break;
-//      case 'running':
-//        console.log('Upload is running');
-//        break;
-//        default:
-//    }
-//  }, 
-//  (error) => {
-//    // Handle unsuccessful uploads
-//  }, 
-//  () => {
-//    // Handle successful uploads on complete
-//    // For instance, get the download URL: https://firebasestorage.googleapis.com/...
-//    getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-//      // console.log('File available at', downloadURL);
-     
-//    });
-//  }
-// );
-}
-// const handlePhotos = (e) => {
-//   const product = {...inputs, img: mainPhoto, salePrice: salePrice, categories: cat, color, size, gender, subCategories: subCat, 
-//     wholeSaleTier1: {wholeSaleQuantity1: wholeSaleQuantity1, wholePrice1: wholeSalePrice1},
-//     wholeSaleTier2: {wholeSaleQuantity2: wholeSaleQuantity2, wholePrice2: wholeSalePrice2},
-//     wholeSaleTier3: {wholeSaleQuantity3: wholeSaleQuantity3, wholePrice3: wholeSalePrice3}};
-//   console.log(product);
-//   addProducts(product, dispatch)
-//   }
 
-  const handleUpdate = async (e) => {
+  const storage = getStorage();
+
+  const clearPhotos = async (e) => {
     e.preventDefault()
 
-    console.log(multiPhotos);
+    // // Create a reference to the file to delete
+    // const desertRef = ref(storage, 'images/desert.jpg');
+
+    // // Delete the file
+    // deleteObject(desertRef).then(() => {
+    //   // File deleted successfully
+    // }).catch((error) => {
+    //   // Uh-oh, an error occurred!
+    // });
+
+    const pro = {
+      ...inputs, img: '', morePhotos: [], salePrice: salePrice, categories: cat, color, size, gender, subCategories: subCat,
+      wholeSaleTier1: { wholeSaleQuantity1: wholeSaleQuantity1, wholePrice1: wholeSalePrice1 },
+      wholeSaleTier2: { wholeSaleQuantity2: wholeSaleQuantity2, wholePrice2: wholeSalePrice2 },
+      wholeSaleTier3: { wholeSaleQuantity3: wholeSaleQuantity3, wholePrice3: wholeSalePrice3 }
+    };
+    await updateProducts(pro._id, pro, dispatch)
+  }
+
+
+  const handleUpdate = async (photos) => {
+    let photoUpload = []
+    if (multiPhotosUpload.length <= 0) {
+      photoUpload = extraPhotos
+    } else if (multiPhotosUpload.length > 0) {
+      photoUpload = extraPhotos
+    }
+    const pro = {
+      ...inputs, img: file, morePhotos: photoUpload, salePrice: salePrice, categories: cat, color, size, gender, subCategories: subCat,
+      wholeSaleTier1: { wholeSaleQuantity1: wholeSaleQuantity1, wholePrice1: wholeSalePrice1 },
+      wholeSaleTier2: { wholeSaleQuantity2: wholeSaleQuantity2, wholePrice2: wholeSalePrice2 },
+      wholeSaleTier3: { wholeSaleQuantity3: wholeSaleQuantity3, wholePrice3: wholeSalePrice3 }
+    };
     try {
-      // const pro = {
-      //   ...inputs, img: mainPhoto, morePhotos:multiPhotos, salePrice: salePrice, categories: cat, color, size, gender, subCategories: subCat,
-      //   wholeSaleTier1: { wholeSaleQuantity1: wholeSaleQuantity1, wholePrice1: wholeSalePrice1 },
-      //   wholeSaleTier2: { wholeSaleQuantity2: wholeSaleQuantity2, wholePrice2: wholeSalePrice2 },
-      //   wholeSaleTier3: { wholeSaleQuantity3: wholeSaleQuantity3, wholePrice3: wholeSalePrice3 }
-      // };
-      // // console.log(pro.wholeSalePrice);
-      // await updateProducts(pro._id, pro, dispatch)
+      console.log("input insde update");
+      console.log(photoUpload);
+      console.log(extraPhotos);
+
+
+      // console.log(inputs);
+      await updateProducts(pro._id, pro, dispatch)
 
     } catch (error) {
       console.log(error);
     }
+    console.log("Finished update");
+    dispatch(clearXPhotos())
   }
 
-  const MONTHS = useMemo(
-    () => [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'May',
-      'Jun',
-      'Jul',
-      'Aug',
-      'Sep',
-      'Oct',
-      'Nov',
-      'Dec',
-    ],
-    [])
+  const handleAll = async (e) => {
+    e.preventDefault()
+    const pro = {
+      ...inputs, categories: cat, color, size, gender, subCategories: subCat,
+      wholeSaleTier1: { wholeSaleQuantity1: wholeSaleQuantity1, wholePrice1: wholeSalePrice1 },
+      wholeSaleTier2: { wholeSaleQuantity2: wholeSaleQuantity2, wholePrice2: wholeSalePrice2 },
+      wholeSaleTier3: { wholeSaleQuantity3: wholeSaleQuantity3, wholePrice3: wholeSalePrice3 }
+    };
+    console.log("running upload");
+    // await upLoadPhoto()
+    await addPhotosFireBase(multiPhotos, mainPhoto, pro, isMainPhoto, isExtraPhotos, dispatch)
+  }
+
+  // const MONTHS = useMemo(
+  //   () => [
+  //     'Jan',
+  //     'Feb',
+  //     'Mar',
+  //     'Apr',
+  //     'May',
+  //     'Jun',
+  //     'Jul',
+  //     'Aug',
+  //     'Sep',
+  //     'Oct',
+  //     'Nov',
+  //     'Dec',
+  //   ],
+  //   [])
+
+  // useEffect(() => {
+  //   const getStats = async () => {
+  //     try {
+  //       const res = await userRequest.get('orders/income?pid=' + productId)
+  //       const list = res.data.sort((a, b) => {
+  //         return a._id - b._id
+  //       })
+  //       list.map((item) =>
+  //         setProductStats((prev) => [
+  //           ...prev,
+  //           { name: MONTHS[item._id - 1], Sales: item.total },
+  //         ])
+  //       )
+  //     } catch (error) { }
+  //   }
+  //   getStats()
+  // }, [MONTHS])
 
   useEffect(() => {
-    const getStats = async () => {
-      try {
-        const res = await userRequest.get('orders/income?pid=' + productId)
-        const list = res.data.sort((a, b) => {
-          return a._id - b._id
-        })
-        list.map((item) =>
-          setProductStats((prev) => [
-            ...prev,
-            { name: MONTHS[item._id - 1], Sales: item.total },
-          ])
-        )
-      } catch (error) { }
+    const cleanPhoto = async () => {
+      dispatch(clearXPhotos())
     }
-    getStats()
-  }, [MONTHS])
+    cleanPhoto()
+  }, [])
+  useEffect(() => {
+    const GetPhoto = async () => {
+      // console.log("/In useEffect");
+    }
+    GetPhoto()
+  }, [dispatch])
   //  console.log(product.gender.includes('men'));     
   //  console.log(wholeSaleToggle); 
 
@@ -392,7 +442,7 @@ const handlePhotos= (e, idx) => {
 
         <div className="productTopRight">
           <div className="productInfoTop">
-            <img src={product.img} alt="" className="productInfoImg" />
+            <img src={mainPreviewFile} alt="" className="productInfoImg" />
             <span className="productName">{product.title}</span>
           </div>
           <div className="productInfoBottom">
@@ -421,10 +471,10 @@ const handlePhotos= (e, idx) => {
             <div className=" wholeSalePair">
               <div className="addProductItem">
                 <label>Image</label>
-                <input type="file" id="file" onClick={e => setFile(e.target.files[0])} />
+                <input type="file" id="file" onChange={e => handleMainPhoto(e.target.files[0])} />
               </div>
               <div className="productUpload">
-                <img className="productPic" src={product.img} />
+                <img className="productPic" src={mainPreviewFile} />
                 <label htmlFor="file">
                   <Publish />
                 </label>
@@ -442,6 +492,7 @@ const handlePhotos= (e, idx) => {
                 </div>
               ))
               }
+              <button onClick={clearPhotos}>Clear photos</button>
             </div>
 
 
@@ -467,7 +518,12 @@ const handlePhotos= (e, idx) => {
 
               <div className="addProductItem" >
                 <label >Sale Price</label>
-                <input style={{ width: saleToggle ? '40%' : '0%' }} disabled={!saleToggle} name='salePrice' type="number" defaultValue={product.salePrice} onChange={handleChange} />
+                <input style={{ width: saleToggle ? '40%' : '0%' }} disabled={!saleToggle}
+                  name='salePrice'
+                  type="number" 
+                  defaultValue={product.salePrice} 
+                  onChange={handleChange}
+                />
               </div>
             </div>
             <div className=" wholeSalePair">
@@ -610,7 +666,7 @@ const handlePhotos= (e, idx) => {
                 <input name='inventory' type="number" defaultValue={product.inventory} onChange={handleChange} />
               </div>
             </div>
-            <button className="productButton" onClick={handleUpdate}>Update</button >
+            <button className="productButton" onClick={handleAll}>Update</button >
           </div>
 
 

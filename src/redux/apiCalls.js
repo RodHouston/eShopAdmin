@@ -1,34 +1,51 @@
 import { publicRequest, userRequest } from "../RequestMethods"
-import { addDesignFailure, addDesignStart, addDesignSuccess, deleteDesignFailure, deleteDesignStart, deleteDesignSuccess, getDesignFailure, getDesignStart, getDesignSuccess, updateDesignFailure, updateDesignStart, updateDesignSuccess } from "./designRedux"
-import { deleteProductFailure, deleteProductStart, deleteProductSuccess, 
+import {
+    addDesignFailure, addDesignStart, addDesignSuccess, deleteDesignFailure, deleteDesignStart,
+    deleteDesignSuccess, getDesignFailure, getDesignStart, getDesignSuccess, updateDesignFailure,
+    updateDesignStart, updateDesignSuccess
+} from "./designRedux"
+import {
+    deleteProductFailure, deleteProductStart, deleteProductSuccess,
     getProductFailure, getProductStart, getProductSuccess,
     updateProductFailure, updateProductStart, updateProductSuccess,
-addProductSuccess,addProductStart, addProductFailure } from "./productRedux"
-import { getUserByIdStart, getUserByIdSuccess, getUserByIdFailure, deleteUserFailure, deleteUserStart, deleteUserSuccess, getUsersFailure, getUsersStart, getUsersSuccess, loginFailure, loginStart, loginSuccess, logOut, updateUserFailure, updateUserStart, updateUserSuccess } from "./userRedux"
+    addProductSuccess, addProductStart, addProductFailure, addPhotoStart, addPhotoSuccess, addPhotoFailure
+} from "./productRedux"
+import {
+    getUserByIdStart, getUserByIdSuccess, getUserByIdFailure, deleteUserFailure,
+    deleteUserStart, deleteUserSuccess, getUsersFailure, getUsersStart, getUsersSuccess,
+    loginFailure, loginStart, loginSuccess, logOut, updateUserFailure, updateUserStart,
+    updateUserSuccess
+} from "./userRedux"
 
-export const login = async (dispatch, user)=>{
+import AddPhotoToFireBase from "./toFirebase.js"
+import { addCategoryFailure, addCategoryStart, addCategorySuccess, getCategoryFailure, getCategoryStart, getCategorySuccess } from "./productCategoryRedux"
+import { addPhotoToGalleryFailure, addPhotoToGalleryStart, addPhotoToGallerySuccess, getPhotoToGalleryFailure, getPhotoToGalleryStart, getPhotoToGallerySuccess,  } from "./photoGalleryRedux"
+
+
+
+export const login = async (dispatch, user) => {
     dispatch(loginStart())
     try {
-        
+
         const res = await publicRequest.post("/auth/login", user)
         console.log("inside login catch");
         dispatch(loginSuccess(res.data));
     } catch (error) {
-        
+
         dispatch(loginFailure())
     }
 }
-export const logout = async (dispatch)=>{    
+export const logout = async (dispatch) => {
     try {
         // const res = await publicRequest.post("/auth/logout", user)
         dispatch(logOut());
     } catch (error) {
-        
+
     }
 }
 
 
-export const getProducts = async (dispatch)=>{
+export const getProducts = async (dispatch) => {
     dispatch(getProductStart())
     try {
         const res = await publicRequest.get("/products")
@@ -39,21 +56,21 @@ export const getProducts = async (dispatch)=>{
 }
 
 
-export const updateProducts = async (id, product, dispatch)=>{
+export const updateProducts = async (id, product, dispatch) => {
     dispatch(updateProductStart())
     try {
-        // console.log('in update product apicall');
+        console.log('in update product apicall');
         //update
         const res = await userRequest.put(`/products/${id}`, product)
-        // console.log(res.data.wholeSalePrice);
-        dispatch(updateProductSuccess({id, product}));
+        console.log("Successful upload");
+        dispatch(updateProductSuccess({ id, product }));
     } catch (error) {
         dispatch(updateProductFailure())
     }
 }
 
 
-export const deleteProducts = async (id, product, dispatch)=>{
+export const deleteProducts = async (id, product, dispatch) => {
     dispatch(deleteProductStart())
     try {
         const res = await userRequest.delete(`/products/${id}`)
@@ -64,8 +81,8 @@ export const deleteProducts = async (id, product, dispatch)=>{
 }
 
 
- 
-export const addProducts = async ( product, dispatch)=>{
+
+export const addProducts = async (product, dispatch) => {
     dispatch(addProductStart())
     try {
         // console.log("inside add product");
@@ -81,7 +98,7 @@ export const addProducts = async ( product, dispatch)=>{
 
 
 // //////// GET DESIGNS ///////////
-export const getDesigns = async (dispatch)=>{
+export const getDesigns = async (dispatch) => {
     dispatch(getDesignStart())
     console.log('here');
     try {
@@ -94,22 +111,22 @@ export const getDesigns = async (dispatch)=>{
 }
 
 
-export const updateDesigns = async (id, design, dispatch)=>{
+export const updateDesigns = async (id, design, dispatch) => {
     dispatch(updateDesignStart())
-    
+
     try {
         console.log('in update product apicall');
         //update
         const res = await userRequest.put(`/designs/${id}`, design)
         // console.log(res);
-        dispatch(updateDesignSuccess({id, design}));
+        dispatch(updateDesignSuccess({ id, design }));
     } catch (error) {
         dispatch(updateDesignFailure())
     }
 }
 
 
-export const deleteDesigns = async (id, design, dispatch)=>{
+export const deleteDesigns = async (id, design, dispatch) => {
     dispatch(deleteDesignStart())
     try {
         const res = await userRequest.delete(`/designs/${id}`)
@@ -119,7 +136,7 @@ export const deleteDesigns = async (id, design, dispatch)=>{
     }
 }
 
-export const addDesigns = async ( design, dispatch)=>{
+export const addDesigns = async (design, dispatch) => {
     dispatch(addDesignStart())
     try {
         const res = await userRequest.post(`/designs`, design)
@@ -132,7 +149,7 @@ export const addDesigns = async ( design, dispatch)=>{
 
 
 //////GET USERS////////
-export const getUsers = async (dispatch)=>{
+export const getUsers = async (dispatch) => {
     dispatch(getUsersStart())
     try {
         console.log("in get user apiCAll");
@@ -143,7 +160,7 @@ export const getUsers = async (dispatch)=>{
     }
 }
 
-export const getUserById = async (id, user, dispatch)=>{
+export const getUserById = async (id, user, dispatch) => {
     dispatch(getUserByIdStart())
     try {
         const res = await userRequest.get(`/users/find/${id}`)
@@ -154,11 +171,11 @@ export const getUserById = async (id, user, dispatch)=>{
     }
 }
 
-export const updateUser = async (id, user, dispatch)=>{
+export const updateUser = async (id, user, dispatch) => {
     dispatch(updateUserStart())
     try {
         //update
-        
+
         const res = await userRequest.put(`/users/${id}`, user)
         // console.log("in api call update user");
         dispatch(updateUserSuccess(res.data));
@@ -168,7 +185,7 @@ export const updateUser = async (id, user, dispatch)=>{
 }
 
 
-export const deleteUser = async (id, user, dispatch)=>{
+export const deleteUser = async (id, user, dispatch) => {
     dispatch(deleteUserStart())
     try {
         const res = await userRequest.delete(`/users/${id}`)
@@ -177,5 +194,76 @@ export const deleteUser = async (id, user, dispatch)=>{
         dispatch(deleteUserFailure())
     }
 }
+
+export const addPhotosFireBase = async (multiPhotos, mainPhoto, product, isMainPhoto, isExtraPhotos, dispatch) => {
+    dispatch(addPhotoStart())
+    try {
+        const res = await AddPhotoToFireBase(multiPhotos, mainPhoto, product, isMainPhoto, isExtraPhotos, dispatch)
+        console.log(res);
+        // dispatch(addPhotoSuccess());
+    } catch (error) {
+        dispatch(addPhotoFailure())
+    }
+}
+
+
+
+///////////CATEGORIES//////
+//GET CATS 
+export const getProductCategories = async (dispatch) => {
+    dispatch(getCategoryStart())
+    try {
+        const res = await publicRequest.get("/productCategories")
+        dispatch(getCategorySuccess(res.data));
+    } catch (error) {
+        dispatch(getCategoryFailure())
+    }
+}
+
+//ADD CATS
+
+export const addProductCatergory = async (category, dispatch) => {
+    dispatch(addCategoryStart())
+    try {
+        console.log("inside add cat");
+        const res = await publicRequest.post(`/productCategories`, category)
+        console.log("after add cat");
+        dispatch(addCategorySuccess(res.data));
+    } catch (error) {
+        dispatch(addCategoryFailure())
+    }
+}
+
+
+/////////PHOTO GALLERY//////////////
+//GET GALLERIES
+export const getPhotoGalleries = async (dispatch) => {
+    dispatch(getPhotoToGalleryStart())
+    try {
+        const res = await publicRequest.get("/photoGallery")
+        dispatch(getPhotoToGallerySuccess(res.data));
+    } catch (error) {
+        dispatch(getPhotoToGalleryFailure())
+    }
+}
+
+
+
+//ADD TO GALLERY
+
+export const addPhotoToGallery = async (photo, dispatch) => {
+    dispatch(addPhotoToGalleryStart())
+    try {
+        console.log("inside add photo to Gallery");
+        const res = await publicRequest.post(`/photoGallery`, photo)
+        console.log("after add photo to Gallery");
+        dispatch(addPhotoToGallerySuccess(res.data));
+    } catch (error) {
+        dispatch(addPhotoToGalleryFailure())
+    }
+}
+
+
+
 
 

@@ -67,10 +67,24 @@ export default function Sidebar() {
                 Add New Product
               </li>
             </Link>
+           <Link to="/productCategories" className="link" >
             <li className="sidebarListItem">
               <BarChart className="sidebarIcon" />
-              Reports
+              Categories
             </li>
+            </Link>
+            <Link to="/newProductCategory" className="link" >
+            <li className="sidebarListItem">
+              <BarChart className="sidebarIcon" />
+              New Category
+            </li>
+            </Link>
+            <Link to="/photoGallery" className="link" >
+            <li className="sidebarListItem">
+              <BarChart className="sidebarIcon" />
+              Photo Gallery
+            </li>
+            </Link>
           </ul>
         </div>
         <div className="sidebarMenu">

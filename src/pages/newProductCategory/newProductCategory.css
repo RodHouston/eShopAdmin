@@ -1,0 +1,108 @@
+.newProduct {
+  flex: 4;
+}
+
+.addProductForm {
+  margin-top: 10px;
+}
+
+.addProductItem {
+  width: 250px;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+  
+}
+
+.addProductItem > label {
+  color: gray;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.addProductItem > input {
+  padding: 10px;
+}
+
+.addProductItem > select {
+  padding: 10px;
+}
+
+.addProductButton {
+  margin-top: 10px;
+  padding: 7px 10px;
+  border: none;
+  border-radius: 10px;
+  background-color: darkblue;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+
+.checkbox-grids{
+  background-color: rgb(148, 148, 148);
+  border-radius: 5px;
+  min-height: 175px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  padding: 0;
+}
+.checkbox-grids li {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex-wrap: wrap;
+  align-items: center;
+  text-align: center;
+  /* float: left; */  
+  width: 25%;
+  margin: 10px;
+}
+.productUpload{
+  display: flex;
+  width: 300px;
+  height: 300px;
+  align-items: center;
+}
+.productPic{
+  display: flex;
+  max-width: 100%;
+  max-height: 100%;
+  align-items: center;
+}
+
+.wholeSaleDiv{
+  display: flex;
+  flex-direction: column;
+  transition: all ease-in-out 1s;
+  align-items: center;
+  text-align: center;
+  overflow: hidden;
+  background-color: rgba(0, 0, 0, 0.1);
+
+}
+.wholeSalePair{
+  display: flex;
+  flex-direction: row;
+  margin: 0 auto;
+  justify-content: center;
+  margin-bottom: 10px;
+  width: 100%;
+}
+.wholeSaleItem{
+  width: 20%;
+  display: flex;
+  flex-direction: column;  
+  margin-bottom: 10px;
+ 
+}
+.wholeSaleItem input{  
+  border: none;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+.subCatObj{
+  background-color: aqua;
+}
