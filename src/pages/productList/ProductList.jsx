@@ -13,7 +13,7 @@ export default function ProductList() {
   const dispatch = useDispatch()
   const history = useHistory()
   const products = useSelector((state) => state.product.products)
-
+    
   useEffect(() => {
 
     getProducts(dispatch)

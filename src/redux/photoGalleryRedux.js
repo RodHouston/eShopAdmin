@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 
 export const photoGallerySlice = createSlice({
-  name: 'photo',
+  name: 'gal',
   initialState:{
       galleries: [],
       isFetching: false,
@@ -15,7 +15,9 @@ export const photoGallerySlice = createSlice({
       state.isFetching = true 
       state.error = false
     },
-    getPhotoToGallerySuccess: (state, action) => {
+    getPhotoToGallerySuccess: (state, action) => {   
+      console.log("here in gal");   
+      console.log(action.payload);
       state.isFetching = false
       state.galleries = action.payload
     },

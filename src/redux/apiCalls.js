@@ -19,7 +19,7 @@ import {
 
 import AddPhotoToFireBase from "./toFirebase.js"
 import { addCategoryFailure, addCategoryStart, addCategorySuccess, getCategoryFailure, getCategoryStart, getCategorySuccess } from "./productCategoryRedux"
-import { addPhotoToGalleryFailure, addPhotoToGalleryStart, addPhotoToGallerySuccess, getPhotoToGalleryFailure, getPhotoToGalleryStart, getPhotoToGallerySuccess,  } from "./photoGalleryRedux"
+import { addPhotoToGalleryFailure, addPhotoToGalleryStart, addPhotoToGallerySuccess, getPhotoToGalleryFailure, getPhotoToGalleryStart, getPhotoToGallerySuccess, updatePhotoToGalleryFailure, updatePhotoToGalleryStart, updatePhotoToGallerySuccess,  } from "./photoGalleryRedux"
 
 
 
@@ -240,7 +240,7 @@ export const addProductCatergory = async (category, dispatch) => {
 export const getPhotoGalleries = async (dispatch) => {
     dispatch(getPhotoToGalleryStart())
     try {
-        const res = await publicRequest.get("/photoGallery")
+        const res = await userRequest.get("/photoGallery")
         dispatch(getPhotoToGallerySuccess(res.data));
     } catch (error) {
         dispatch(getPhotoToGalleryFailure())
@@ -249,13 +249,13 @@ export const getPhotoGalleries = async (dispatch) => {
 
 
 
-//ADD TO GALLERY
+//ADD GALLERY
 
 export const addPhotoToGallery = async (photo, dispatch) => {
     dispatch(addPhotoToGalleryStart())
     try {
         console.log("inside add photo to Gallery");
-        const res = await publicRequest.post(`/photoGallery`, photo)
+        const res = await userRequest.post(`/photoGallery`, photo)
         console.log("after add photo to Gallery");
         dispatch(addPhotoToGallerySuccess(res.data));
     } catch (error) {
@@ -263,7 +263,18 @@ export const addPhotoToGallery = async (photo, dispatch) => {
     }
 }
 
+/////////ADD PHOTO TO GALLERY/////////
 
-
-
+export const updatePhotoToGallery = async (id, gallery, dispatch) => {
+    dispatch(updatePhotoToGalleryStart())
+    try {
+        console.log(gallery);
+        //update
+        const res = await userRequest.put(`/photoGallery/${id}`, gallery)
+        // console.log("in api call update user");
+        dispatch(updatePhotoToGallerySuccess(res.data));
+    } catch (error) {
+        dispatch(updatePhotoToGalleryFailure())
+    }
+}
 

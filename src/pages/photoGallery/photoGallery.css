@@ -1,14 +1,14 @@
-.main{
+.main {
   display: flex;
   flex-direction: column;
-  width: 80vw;
+  width: 100%;
+  position: relative;
 }
 
 .newProduct {
   display: flex;
   /* flex:4; */
   flex-direction: row;
-  
 }
 
 .addProductForm {
@@ -24,17 +24,17 @@
   margin-bottom: 10px;
 }
 
-.addProductItem > label {
+.addProductItem>label {
   color: gray;
   font-weight: 600;
   margin-bottom: 10px;
 }
 
-.addProductItem > input {
+.addProductItem>input {
   padding: 10px;
 }
 
-.addProductItem > select {
+.addProductItem>select {
   padding: 10px;
 }
 
@@ -49,7 +49,7 @@
   cursor: pointer;
 }
 
-.checkbox-grid{
+.checkbox-grid {
   background-color: rgb(148, 148, 148);
   border-radius: 5px;
   height: 175px;
@@ -59,13 +59,86 @@
   align-items: center;
   padding: 0;
 }
+
 .checkbox-grid li {
   display: flex;
   flex-direction: column;
   justify-content: center;
   flex-wrap: wrap;
   align-items: center;
-  /* float: left; */  
+  /* float: left; */
   width: 25%;
   margin: 10px;
+}
+
+.imgPreviewDiv {
+  width: 100px;
+  height: 100px;
+}
+
+.imgPreview {
+  width: 100%;
+  height: 100%;
+}
+
+.galleryPreview {
+  display: flex;
+  background-color: rgb(4, 60, 182);
+}
+
+.galleryImageDivs {
+  width: 100px;
+  height: 100px;
+  margin: 10px;
+}
+
+.galleryImages {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.modal {
+  display: flex;
+  background-color: rgba(0, 0, 0, .8);
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: 10;
+}
+
+.modalContent {
+  display: flex;
+  flex-wrap: wrap;
+  width: 70vw;
+  /* height:400px; */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  position: relative;
+  background-color: blue;
+}
+
+.modalImageDiv {
+  width: 100px;
+  height: 100px;
+  display: flex;
+
+}
+
+.modalImage {
+  width: 100%;
+  height: 100%;
+}
+
+.addPhotoDiv {
+  display: flex;
+  flex-direction: row;
+  padding: 10px;
+  border-bottom: 2px solid black;
+  justify-content: center;
+  align-items: center;
+}
+
+.addPhotoInfo {
+  margin-right: 10px;
 }

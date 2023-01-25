@@ -131,10 +131,7 @@ export default function NewProductCategory() {
   }
 
   const handleFireBase = (e) => {
-    e.preventDefault()
-    let items = []
-    let itemsProcessed = 0
-    let haveFiles = false
+    e.preventDefault()  
     let isSuccesful = false
     console.log(mainPhoto);
     let file = mainPhoto

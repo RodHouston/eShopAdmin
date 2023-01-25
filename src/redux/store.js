@@ -31,7 +31,7 @@ import {
      product: productReducer, 
      design: designReducer,
     category: categoryReducer,
-    photoGallery: photoGalleryReducer
+    gallery: photoGalleryReducer,
     });
   
   const persistedReducer = persistReducer(persistConfig, rootReducer);

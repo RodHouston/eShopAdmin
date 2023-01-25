@@ -11,12 +11,14 @@ import { addPhotosFireBase, addProducts, updateProducts } from "../../redux/apiC
 import { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject } from "firebase/storage";
 import app from "../../firebase"
 import { addPhotos, clearXPhotos } from "../../redux/productRedux";
+import StarIcon from "../../utils/StarIcon";
 
 export default function Product() {
 
   const location = useLocation()
   const productId = location.pathname.split('/')[2];
   const [productStats, setProductStats] = useState([])
+  const currentUser = useSelector((state) => state.user.currentUser)
 
   const product = useSelector((state) => state.product.products.find(product => product._id === productId))
   const [prod, setPro] = useState(product)
@@ -33,6 +35,10 @@ export default function Product() {
   const [isMainPhoto, setIsMainPhoto] = useState(false)
   const [isExtraPhotos, setIsExtraPhoto] = useState(false)
   const [isUploading, setIsUploading] = useState(false)
+  const [stars, setStars] = useState(['', '', '', '',''])
+  const [ratings, setRatings] = useState([])
+  const [rating, setRating] = useState([])
+  const [comment, setComment] = useState('')
 
   const [multiPhotosUpload, setMultiPhotosUpload] = useState([])
 
@@ -308,22 +314,33 @@ export default function Product() {
     setPreviewFiles(newPre)
   }
 
+  const handleRatings = (e) => {
+    let star = stars
+    star.map((rat, idx) => {
+      console.log(idx);
+      if(idx >= e.target.value){      
+        star[idx]=false
+      }      
+      if(idx<e.target.value){
+        star[idx] = true
+      }      
+    }) 
+    setStars([...star])
+    setRating(e.target.value)
+  }
 
 
-  const storage = getStorage();
+  const handleComment =(e)=> {
+    setComment(e.target.value)
+  }
+  console.log(ratings);
+  console.log(stars);
+  console.log(comment);
+
+
 
   const clearPhotos = async (e) => {
     e.preventDefault()
-
-    // // Create a reference to the file to delete
-    // const desertRef = ref(storage, 'images/desert.jpg');
-
-    // // Delete the file
-    // deleteObject(desertRef).then(() => {
-    //   // File deleted successfully
-    // }).catch((error) => {
-    //   // Uh-oh, an error occurred!
-    // });
 
     const pro = {
       ...inputs, img: '', morePhotos: [], salePrice: salePrice, categories: cat, color, size, gender, subCategories: subCat,
@@ -366,14 +383,22 @@ export default function Product() {
 
   const handleAll = async (e) => {
     e.preventDefault()
+
+    const rat = [...product.ratings]
+    const rt = {rating:rating, customerName: currentUser.username, ratingComment:comment}
+    rat.push(rt)
+
+
     const pro = {
-      ...inputs, categories: cat, color, size, gender, subCategories: subCat,
+      ...inputs, categories: cat, color, size, gender, subCategories: subCat, 
+      ratings:rat,
       wholeSaleTier1: { wholeSaleQuantity1: wholeSaleQuantity1, wholePrice1: wholeSalePrice1 },
       wholeSaleTier2: { wholeSaleQuantity2: wholeSaleQuantity2, wholePrice2: wholeSalePrice2 },
       wholeSaleTier3: { wholeSaleQuantity3: wholeSaleQuantity3, wholePrice3: wholeSalePrice3 }
     };
+    console.log(pro);
     console.log("running upload");
-    // await upLoadPhoto()
+    // // await upLoadPhoto()
     await addPhotosFireBase(multiPhotos, mainPhoto, pro, isMainPhoto, isExtraPhotos, dispatch)
   }
 
@@ -520,8 +545,8 @@ export default function Product() {
                 <label >Sale Price</label>
                 <input style={{ width: saleToggle ? '40%' : '0%' }} disabled={!saleToggle}
                   name='salePrice'
-                  type="number" 
-                  defaultValue={product.salePrice} 
+                  type="number"
+                  defaultValue={product.salePrice}
                   onChange={handleChange}
                 />
               </div>
@@ -666,6 +691,29 @@ export default function Product() {
                 <input name='inventory' type="number" defaultValue={product.inventory} onChange={handleChange} />
               </div>
             </div>
+
+            <div className="addProductItem">
+              <label>Rating</label>
+              <div className="starDiv">
+                {stars?.map((star, idx) => (
+                 star ? 
+                    <StarIcon key={idx} data="blue" /> 
+                  :
+                  <StarIcon key={idx} data="white" />                   
+                ))
+                }
+              </div>
+              <input type="range" name="ratings" min="0" max="5" defaultValue="0" onChange={handleRatings}></input>
+            </div>
+            <div className="addProductItem">
+              <label>Customer Name</label>
+              <input name='name' type="text" defaultValue={currentUser.username} onChange={handleChange} />
+            </div>
+            <label>Comment</label>
+            <textarea name='comment' className='txtArea' rows="4" cols="50" defaultValue={"EnterComment Here"} onChange={handleComment}></textarea>
+
+
+
             <button className="productButton" onClick={handleAll}>Update</button >
           </div>
 
